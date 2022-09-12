@@ -1,37 +1,48 @@
-package com.udacity.jdnd.course3.critter.pet;
+package com.udacity.jdnd.course3.critter.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.udacity.jdnd.course3.critter.critterenum.PetType;
+
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
-@Entity(name="pet")
+@Entity
 public class Pet {
 
     @Id
     @GeneratedValue
     private long id;
     @Column(name="pet_type")
+    @Enumerated(EnumType.STRING)
     private PetType petType;
+
     @Column()
     private String name;
-    @Column(name="owner_id")
-    private long ownerId;
+
     @Column(name="birth_date")
     private LocalDate birthDate;
+
     @Column()
     private String notes;
+
+    @ManyToOne
+    @JoinColumn(name="customer_id")
+    private Customer owner;
+
+    @ManyToMany(mappedBy = "listPet")
+    private List<Schedule> listSchedule;
+
     public Pet() {
     }
 
-    public Pet(long id, PetType petType, String name, long ownerId, LocalDate birthDate, String notes) {
+    public Pet(long id, PetType petType, String name, LocalDate birthDate, String notes, Customer owner, List<Schedule> listSchedule) {
         this.id = id;
         this.petType = petType;
         this.name = name;
-        this.ownerId = ownerId;
         this.birthDate = birthDate;
         this.notes = notes;
+        this.owner = owner;
+        this.listSchedule = listSchedule;
     }
 
     public long getId() {
@@ -58,14 +69,6 @@ public class Pet {
         this.name = name;
     }
 
-    public long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(long ownerId) {
-        this.ownerId = ownerId;
-    }
-
     public LocalDate getBirthDate() {
         return birthDate;
     }
@@ -80,5 +83,21 @@ public class Pet {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public Customer getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Customer owner) {
+        this.owner = owner;
+    }
+
+    public List<Schedule> getListSchedule() {
+        return listSchedule;
+    }
+
+    public void setListSchedule(List<Schedule> listSchedule) {
+        this.listSchedule = listSchedule;
     }
 }
