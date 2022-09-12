@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Customer extends Humanoid {
+public class Customer extends User {
     @Id
     @GeneratedValue
     private long id;
