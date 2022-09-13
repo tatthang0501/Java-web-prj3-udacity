@@ -10,7 +10,7 @@ import java.util.List;
 public class Pet {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
     @Column(name="pet_type")
     @Enumerated(EnumType.STRING)

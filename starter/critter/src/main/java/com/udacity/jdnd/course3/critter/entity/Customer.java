@@ -5,9 +5,6 @@ import java.util.List;
 
 @Entity
 public class Customer extends User {
-    @Id
-    @GeneratedValue
-    private long id;
 
     @Column(name="phone_number")
     private String phoneNumber;
@@ -22,20 +19,11 @@ public class Customer extends User {
         super();
     }
 
-    public Customer(long id, String name, long id1, String phoneNumber, String notes, List<Pet> petList) {
+    public Customer(long id, String name, String phoneNumber, String notes, List<Pet> petList) {
         super(id, name);
-        this.id = id1;
         this.phoneNumber = phoneNumber;
         this.notes = notes;
         this.petList = petList;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getPhoneNumber() {
@@ -61,4 +49,5 @@ public class Customer extends User {
     public void setPetList(List<Pet> petList) {
         this.petList = petList;
     }
+
 }
