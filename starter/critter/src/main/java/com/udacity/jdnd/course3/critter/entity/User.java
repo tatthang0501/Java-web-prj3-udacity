@@ -3,10 +3,11 @@ package com.udacity.jdnd.course3.critter.entity;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "user")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
     @Column(name="name")
     private String name;
@@ -28,4 +29,5 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
+
 }

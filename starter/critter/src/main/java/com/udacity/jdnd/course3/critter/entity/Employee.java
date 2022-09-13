@@ -63,4 +63,5 @@ public class Employee extends User {
     public void setListSchedule(List<Schedule> listSchedule) {
         this.listSchedule = listSchedule;
     }
+
 }

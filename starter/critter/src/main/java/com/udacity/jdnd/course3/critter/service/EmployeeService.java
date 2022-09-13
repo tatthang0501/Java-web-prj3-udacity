@@ -1,12 +1,18 @@
 package com.udacity.jdnd.course3.critter.service;
 
-import com.udacity.jdnd.course3.critter.dto.CustomerDTO;
+import com.udacity.jdnd.course3.critter.critterenum.EmployeeSkill;
 import com.udacity.jdnd.course3.critter.dto.EmployeeDTO;
-import com.udacity.jdnd.course3.critter.entity.Customer;
+import com.udacity.jdnd.course3.critter.dto.EmployeeRequestDTO;
 import com.udacity.jdnd.course3.critter.entity.Employee;
 import com.udacity.jdnd.course3.critter.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.DayOfWeek;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class EmployeeService {
@@ -34,6 +40,41 @@ public class EmployeeService {
             return copyEmployeeEntityToDto((employeeFound));
         }
         throw new UnsupportedOperationException("Cannot find employee");
+    }
+
+    public void setAvailabilityDayOfEmployee(Set<DayOfWeek> daysAvailable, long employeeId){
+        Employee employeeFound = employeeRepository.findById(employeeId).orElse(null);
+        if(employeeFound != null){
+            employeeFound.setDaysAvailable(daysAvailable);
+            employeeRepository.save(employeeFound);
+        }
+        else throw new UnsupportedOperationException("Cannot find employee");
+    }
+
+    public List<EmployeeDTO> findEmployeesForService(EmployeeRequestDTO employeeRequestDTO){
+        DayOfWeek queryingDay = employeeRequestDTO.getDate().getDayOfWeek();
+        Set<EmployeeSkill> queryingSkills = employeeRequestDTO.getSkills();
+
+        Set<String> skillsString = new HashSet<>();
+        queryingSkills.forEach(employeeSkill -> {
+            skillsString.add(employeeSkill.toString());
+        });
+
+        Set<Employee> listEmployeeFound = employeeRepository.findEmployeesForService(queryingDay, skillsString);
+        listEmployeeFound.forEach(employee -> {
+            System.out.println(employee.toString());
+        });
+        List<EmployeeDTO> listEmployeeDtoFound = new ArrayList<>();
+        if(listEmployeeFound != null && listEmployeeFound.size() != 0){
+            listEmployeeFound.forEach(employee -> {
+                if(employee.getSkills().containsAll(queryingSkills)){
+                    listEmployeeDtoFound.add(copyEmployeeEntityToDto(employee));
+                }
+            });
+            return listEmployeeDtoFound;
+        }
+        throw new UnsupportedOperationException("Cannot find any employee with this request");
+
     }
 
     private EmployeeDTO copyEmployeeEntityToDto(Employee employee){
