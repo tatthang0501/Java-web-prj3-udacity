@@ -1,21 +1,22 @@
 package com.udacity.jdnd.course3.critter.service;
 
+import com.udacity.jdnd.course3.critter.dto.PetDTO;
+import com.udacity.jdnd.course3.critter.entity.Pet;
 import com.udacity.jdnd.course3.critter.repository.CustomerRepository;
 import com.udacity.jdnd.course3.critter.entity.Customer;
 import com.udacity.jdnd.course3.critter.dto.CustomerDTO;
+import com.udacity.jdnd.course3.critter.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CustomerService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    PetRepository petRepository;
     @Autowired
     CustomerRepository customerRepository;
 
@@ -35,8 +36,8 @@ public class CustomerService {
 
     public CustomerDTO getCustomerByPetId(long petId){
         Customer petOwnerFound = customerRepository.findCustomerByPetId(petId);
+        petOwnerFound.setPetList(petRepository.getPetsByOwnerId(petOwnerFound.getId()));
         if(petOwnerFound != null){
-            entityManager.detach(petOwnerFound);
             return copyCustomerEntityToDto(petOwnerFound);
         }
         throw new UnsupportedOperationException("Cannot find customer");
@@ -44,9 +45,14 @@ public class CustomerService {
 
     public List<CustomerDTO> getAllCustomer(){
         List<Customer> listAllCustomer = customerRepository.findAll();
-        List<CustomerDTO> listAllCustomerDto = new ArrayList<>();
 
         listAllCustomer.forEach(customer -> {
+            customer.setPetList(petRepository.getPetsByOwnerId(customer.getId()));
+        });
+
+        List<CustomerDTO> listAllCustomerDto = new ArrayList<>();
+        listAllCustomer.forEach(customer -> {
+
             CustomerDTO customerDTO = copyCustomerEntityToDto(customer);
             listAllCustomerDto.add(customerDTO);
         });
