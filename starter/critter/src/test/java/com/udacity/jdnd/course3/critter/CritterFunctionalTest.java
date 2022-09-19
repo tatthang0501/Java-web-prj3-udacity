@@ -209,15 +209,16 @@ public class CritterFunctionalTest {
         sched3.setPetIds(sched2.getPetIds());
         sched3.setActivities(Sets.newHashSet(EmployeeSkill.SHAVING, EmployeeSkill.PETTING));
         sched3.setDate(LocalDate.of(2020, 3, 23));
-        scheduleController.createSchedule(sched3);
-
+        ScheduleDTO insertedDto = scheduleController.createSchedule(sched3);
+        Assertions.assertTrue(insertedDto.getPetIds() != null);
+        Assertions.assertTrue(insertedDto.getEmployeeIds() != null);
         /*
             We now have 3 schedule entries. The third schedule entry has the same employees as the 1st schedule
             and the same pets/owners as the second schedule. So if we look up schedule entries for the employee from
             schedule 1, we should get both the first and third schedule as our result.
          */
 
-        //Employee 1 in is both schedule 1 and 3
+//        //Employee 1 in is both schedule 1 and 3
         List<ScheduleDTO> scheds1e = scheduleController.getScheduleForEmployee(sched1.getEmployeeIds().get(0));
         compareSchedules(sched1, scheds1e.get(0));
         compareSchedules(sched3, scheds1e.get(1));

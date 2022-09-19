@@ -25,11 +25,15 @@ public class Schedule {
     private Set<EmployeeSkill> activities;
 
     @ManyToMany
-    @JoinTable(name = "PET_EMP_SCHEDULE", joinColumns = @JoinColumn(name = "schedule_id"), inverseJoinColumns = @JoinColumn(name = "employee_id"))
+    @JoinTable(name = "EMPLOYEE_SCHEDULE",
+            joinColumns = @JoinColumn(name = "schedule_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id"))
     private List<Employee> listEmployee;
 
     @ManyToMany
-    @JoinTable(name = "PET_EMP_SCHEDULE", joinColumns = @JoinColumn(name = "schedule_id"), inverseJoinColumns = @JoinColumn(name = "pet_id"))
+    @JoinTable(name = "PET_SCHEDULE",
+            joinColumns = @JoinColumn(name = "schedule_id"),
+            inverseJoinColumns = @JoinColumn(name = "pet_id"))
     private List<Pet> listPet;
 
     public Schedule() {
